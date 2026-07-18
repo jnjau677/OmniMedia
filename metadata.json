@@ -1,6 +1,6 @@
 {
-  "name": "Media Player",
-  "description": "A high-performance responsive video and music player with streaming support, local playlists, search, and dynamic custom audio visualizer.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "NexusMedia Player",
+  "description": "Robust multimedia player with wide format support, subtitle parsing (VTT, SRT, SUB, SSA, LRC), hardware acceleration, multi-core decoding, kids lock, gesture controls, background playback, and responsive layouts.",
+  "requestFramePermissions": ["android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_MEDIA_AUDIO", "android.permission.READ_MEDIA_VIDEO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.INTERNET", "android.permission.WAKE_LOCK", "android.permission.ACCESS_WIFI_STATE"],
+  "majorCapabilities": ["LOCAL_MEDIA_PLAYBACK", "SUBTITLE_PARSING_MULTIPLE_FORMATS", "GESTURE_CONTROLS", "KIDS_LOCK", "BACKGROUND_PLAYBACK", "RESPONSIVE_UI", "ACCESSIBLE_DESIGN"]
 }

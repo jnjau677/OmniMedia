@@ -1,4 +1,4 @@
-package com.example
+package com.nexusmedia
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,9 +11,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.ui.screens.MediaPlayerApp
-import com.example.ui.theme.MyApplicationTheme
-import com.example.viewmodel.MediaViewModel
+import com.nexusmedia.ui.screens.MediaPlayerApp
+import com.nexusmedia.ui.theme.MyApplicationTheme
+import com.nexusmedia.viewmodel.MediaViewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MediaViewModel by viewModels()

@@ -1,7 +1,13 @@
-package com.example.data
+package com.nexusmedia.data
 
 import kotlinx.coroutines.flow.Flow
+// SUPPORTED FORMATS REFERENCE:
+// Video: MP4, MKV, AVI, MOV, 3GP, FLV, F4V, WEBM, WMV, RMVB, TS, MPG, M4V
+// Subtitles: VTT, SRT, SUB, SSA, SMI, MPL, PJS, TXT, LRC, AAS
+
 import kotlinx.coroutines.flow.firstOrNull
+import com.nexusmedia.network.MuxVideoService
+import com.nexusmedia.data.VideoScanner
 
 class MediaRepository(private val mediaDao: MediaDao) {
 
@@ -77,7 +83,7 @@ class MediaRepository(private val mediaDao: MediaDao) {
     suspend fun saveAppSettings(settings: AppSettingsEntity) =
         mediaDao.saveAppSettings(settings)
 
-    // Pre-populate Database with stunning curated demo audio and video streams
+    // Pre-populate Database with local demo content (local-first)
     suspend fun prepopulateDemoContent() {
         val currentItems = allMediaItems.firstOrNull()
         if (currentItems.isNullOrEmpty()) {
@@ -88,7 +94,7 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Durian Open Movie Project",
                     album = "Local Drive",
                     duration = 52000, // 0:52
-                    url = "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                    url = "/storage/emulated/0/Movies/Sintel.mp4",
                     isVideo = true,
                     isLocal = true,
                     isDownloaded = true,
@@ -101,9 +107,9 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Stellar AudioLabs",
                     album = "Galaxy Journeys",
                     duration = 180000, // 3:00
-                    url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                    url = "/storage/emulated/0/Movies/BigBuckBunny.mp4",
                     isVideo = true,
-                    isLocal = false,
+                    isLocal = true,
                     isDownloaded = false,
                     thumbnailUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop",
                     genre = "Synthwave",
@@ -115,9 +121,9 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Ambient Earth",
                     album = "Nature Escapes",
                     duration = 150000, // 2:30
-                    url = "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                    url = "/storage/emulated/0/Movies/ElephantsDream.mp4",
                     isVideo = true,
-                    isLocal = false,
+                    isLocal = true,
                     isDownloaded = false,
                     thumbnailUrl = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500&auto=format&fit=crop",
                     genre = "Nature",
@@ -129,9 +135,9 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Retro Coding Collective",
                     album = "Syntax & Coffee",
                     duration = 240000, // 4:00
-                    url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                    url = "/storage/emulated/0/Music/SoundHelix-Song-1.mp3",
                     isVideo = false,
-                    isLocal = false,
+                    isLocal = true,
                     isDownloaded = false,
                     thumbnailUrl = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&auto=format&fit=crop",
                     genre = "Lofi",
@@ -143,9 +149,9 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Neon Driver",
                     album = "Grid Runner",
                     duration = 195000, // 3:15
-                    url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                    url = "/storage/emulated/0/Music/SoundHelix-Song-2.mp3",
                     isVideo = false,
-                    isLocal = false,
+                    isLocal = true,
                     isDownloaded = false,
                     thumbnailUrl = "https://images.unsplash.com/photo-1515462277126-270d878326e5?w=500&auto=format&fit=crop",
                     genre = "Electronic",
@@ -157,9 +163,9 @@ class MediaRepository(private val mediaDao: MediaDao) {
                     artist = "Elena Woods",
                     album = "Woodland Mornings",
                     duration = 210000, // 3:30
-                    url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                    url = "/storage/emulated/0/Music/SoundHelix-Song-3.mp3",
                     isVideo = false,
-                    isLocal = false,
+                    isLocal = true,
                     isDownloaded = false,
                     thumbnailUrl = "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&auto=format&fit=crop",
                     genre = "Acoustic",
@@ -167,8 +173,10 @@ class MediaRepository(private val mediaDao: MediaDao) {
                 )
             )
             mediaDao.insertMediaItems(demoItems)
-
-            // Create initial Playlists
+        }
+        // Only create playlists if none exist, to avoid duplicates
+        val existingPlaylists = allPlaylists.firstOrNull()
+        if (existingPlaylists.isNullOrEmpty()) {
             val favPlaylistId = mediaDao.insertPlaylist(
                 PlaylistEntity(
                     name = "My Favorites",
@@ -190,5 +198,16 @@ class MediaRepository(private val mediaDao: MediaDao) {
                 PlaylistItemEntity(playlistId = codePlaylistId, mediaItemId = "audio_synth_04", orderIndex = 1)
             )
         }
+    }
+
+    // Reference: scan local video files using SAF / MediaStore
+    suspend fun scanLocalVideos(context: android.content.Context): List<MediaItemEntity> {
+        return VideoScanner.scanLocalVideos(context)
+    }
+
+    // MUX REFERENCE: Generate Mux playback URL for local/streamed media
+    // If using Mux encoding, the playback URL replaces item.url in the UI/player.
+    suspend fun generateMuxPlaybackUrl(playbackId: String): String {
+        return MuxVideoService.playbackUrl(playbackId)
     }
 }

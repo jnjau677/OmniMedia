@@ -1,4 +1,4 @@
-package com.example.data
+package com.nexusmedia.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -18,7 +18,7 @@ data class MediaItemEntity(
     val thumbnailUrl: String,
     val genre: String,
     val lyrics: String? = null,
-    val resolution: String = "1080p",
+    val resolution: String = "2160p",
     val bitRate: String = "320kbps"
 )
 

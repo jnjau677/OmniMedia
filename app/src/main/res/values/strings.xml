@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">Media Player</string>
+    <string name="app_name">NexusMedia</string>
+<string name="subtitle_format">Subtitle Format</string>
+    <string name="subtitle_language">Subtitle Language</string>
+    <string name="subtitle_offset">Subtitle Sync</string>
+    <string name="subtitle_search">Search Subtitles</string>
+<string name="subtitle_sync">Subtitle Sync</string>
+<string name="subtitle_offset">Subtitle Offset (ms)</string>
+<string name="subtitle_format_vtt">WebVTT</string>
+<string name="subtitle_format_srt">SubRip (SRT)</string>
+<string name="subtitle_format_sub">MicroDVD (SUB)</string>
+<string name="subtitle_format_ssa">SubStation Alpha (SSA)</string>
+<string name="subtitle_format_lrc">LRC Lyrics</string>
+<string name="subtitle_format_txt">Plain Text</string>
+<string name="video_format">Video Format</string>
+<string name="audio_format">Audio Format</string>
+<string name="resolution_auto">Auto</string>
+<string name="resolution_720p">720p (HD)</string>
+<string name="resolution_1080p">1080p (Full HD)</string>
+<string name="resolution_2160p">2160p (4K UHD)</string>
+<string name="kids_lock_enabled">Kids Lock Enabled</string>
+<string name="background_playback">Background Playback</string>
+<string name="auto_pause">Auto Pause at End</string>
+<string name="noise_cleaner">Noise Cleaner</string>
+<string name="sound_booster">Sound Booster</string>
+<string name="equalizer_normal">Normal EQ</string>
+<string name="equalizer_bass_boost">Bass Boost</string>
+<string name="equalizer_vocal_boost">Vocal Boost</string>
+<string name="equalizer_classical">Classical</string>
+<string name="equalizer_dance">Dance</string>
 </resources>

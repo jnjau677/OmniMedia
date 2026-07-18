@@ -1,4 +1,10 @@
-package com.example.data
+package com.nexusmedia.data
+
+// SEARCH FTS INDEXING (3): Room Full-Text Search reference
+// To enable: @Fts4(languageId = "en-us") on media_items entity
+// Query: @Query("SELECT * FROM media_items WHERE title MATCH :query")
+// Note: Requires Room FTS dependency and schema migration.
+
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.example.ui.screens
+package com.nexusmedia.ui.screens
 
 import android.content.Context
 import android.view.SurfaceHolder
@@ -49,17 +49,31 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.example.data.*
-import com.example.ui.screens.rememberIsInPipMode
-import com.example.ui.screens.enterPipMode
+import com.nexusmedia.data.*
+import com.nexusmedia.ui.screens.rememberIsInPipMode
+import com.nexusmedia.ui.screens.enterPipMode
 import android.app.Activity
-import com.example.ui.theme.*
-import com.example.viewmodel.MediaViewModel
-import com.example.viewmodel.PlaybackState
-import com.example.viewmodel.PlaybackRepeatMode
-import com.example.viewmodel.formatTime
+import com.nexusmedia.ui.theme.*
+import com.nexusmedia.viewmodel.MediaViewModel
+import com.nexusmedia.viewmodel.PlaybackState
+import com.nexusmedia.viewmodel.PlaybackRepeatMode
+import com.nexusmedia.viewmodel.formatTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+// SAF INTEGRATION REFERENCE:
+// val pickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+//     uri?.let { selectedUri ->
+//         val mediaItem = viewModel.importSampleLocalTrack() // or scan via VideoScanner
+//         // Load selected file from URI using ContentResolver
+//     }
+// }
+// pickerLauncher.launch(SAFFilePicker.supportedMimeTypes())
+
+
+// SWIPE GESTURE DETECTION STUB:
+// Implement detectHorizontalDragGestures / detectVerticalDragGestures
+// connected to viewModel.gestureSeekEnabled / gestureVolumeEnabled / gestureBrightnessEnabled
 import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,10 +107,11 @@ fun MediaPlayerApp(viewModel: MediaViewModel) {
             if (item.isVideo) {
                 VideoPlayerContainer(viewModel = viewModel, current = item)
             } else {
+                // Audio-only PiP mode: thumbnail + small play indicator overlay
                 Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
                     AsyncImage(
                         model = item.thumbnailUrl,
-                        contentDescription = null,
+                        contentDescription = "Interactive element",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -235,7 +250,7 @@ fun MediaPlayerApp(viewModel: MediaViewModel) {
                                     )
                                     Row {
                                         IconButton(onClick = { showSleepTimerDialog = true }) {
-                                            Icon(Icons.Outlined.Timer, contentDescription = "Sleep Timer", tint = MaterialTheme.colorScheme.onBackground)
+                                            Icon(Icons.Outlined.Timer, contentDescription = "Open sleep timer", tint = MaterialTheme.colorScheme.onBackground)
                                         }
                                         IconButton(onClick = { showQueueDialog = true }) {
                                             Icon(Icons.Filled.QueueMusic, contentDescription = "Play Queue", tint = MaterialTheme.colorScheme.onBackground)
@@ -453,7 +468,7 @@ fun SplashScreen(onSkip: () -> Unit) {
                 }
                 Icon(
                     imageVector = Icons.Filled.PlayCircle,
-                    contentDescription = "Logo",
+                    contentDescription = "App logo, cosmic player",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(110.dp)
                 )
@@ -522,7 +537,7 @@ fun MiniPlayerBar(
             ) {
                 AsyncImage(
                     model = current.thumbnailUrl,
-                    contentDescription = null,
+                    contentDescription = "Thumbnail for ${current.title}",
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
@@ -554,21 +569,21 @@ fun MiniPlayerBar(
                 ) {
                     Icon(
                         imageVector = if (viewModel.playbackState is PlaybackState.Playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                        contentDescription = "Play/Pause",
+                        contentDescription = "Play or pause media",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 IconButton(onClick = { viewModel.skipToNext() }) {
                     Icon(
                         imageVector = Icons.Filled.SkipNext,
-                        contentDescription = "Next",
+                        contentDescription = "Skip to next track",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 IconButton(onClick = { viewModel.stopPlayback() }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Stop",
+                        contentDescription = "Stop playback",
                         tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
                 }
@@ -620,7 +635,7 @@ fun HomeScreen(
                 IconButton(onClick = { /* Simulated Profile Hub */ }) {
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Profile",
+                        contentDescription = "Open profile",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(32.dp)
                     )
@@ -741,7 +756,7 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag("search_input_field"),
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary) },
             trailingIcon = {
                 if (viewModel.searchQuery.isNotEmpty()) {
                     IconButton(onClick = { viewModel.searchQuery = "" }) {
@@ -929,11 +944,11 @@ fun LibraryScreen(
             )
             if (activeLibraryTab == "playlists") {
                 IconButton(onClick = { showCreatePlaylistDialog = true }) {
-                    Icon(Icons.Filled.Add, contentDescription = "Create Playlist", tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Filled.Add, contentDescription = "Create new playlist", tint = MaterialTheme.colorScheme.primary)
                 }
             } else if (activeLibraryTab == "local") {
                 IconButton(onClick = { showAddLocalMediaDialog = true }) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add Local Media", tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Filled.Add, contentDescription = "Add local media file", tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -976,7 +991,7 @@ fun LibraryScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(
                                 Icons.Outlined.FolderOpen,
-                                contentDescription = null,
+                                contentDescription = "Interactive element",
                                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                                 modifier = Modifier.size(64.dp)
                             )
@@ -1075,7 +1090,7 @@ fun LibraryScreen(
                                                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), CircleShape),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Icon(Icons.Filled.QueueMusic, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                                            Icon(Icons.Filled.QueueMusic, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary)
                                         }
                                         Spacer(modifier = Modifier.width(16.dp))
                                         Column {
@@ -1324,7 +1339,7 @@ fun FileExplorerView(
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Filled.Storage, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+            Icon(Icons.Filled.Storage, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
             
             Text(
@@ -1407,7 +1422,7 @@ fun FileExplorerView(
 
                         Icon(
                             imageVector = icon,
-                            contentDescription = null,
+                            contentDescription = "Interactive element",
                             tint = iconTint,
                             modifier = Modifier.size(28.dp)
                         )
@@ -1571,7 +1586,7 @@ fun FullScreenPlayer(
                 )
                 Row {
                     IconButton(onClick = onShowSleepTimer) {
-                        Icon(Icons.Outlined.Timer, contentDescription = "Sleep Timer", tint = MaterialTheme.colorScheme.onBackground)
+                        Icon(Icons.Outlined.Timer, contentDescription = "Open sleep timer", tint = MaterialTheme.colorScheme.onBackground)
                     }
                     IconButton(onClick = onShowQueue) {
                         Icon(Icons.Filled.QueueMusic, contentDescription = "Play Queue", tint = MaterialTheme.colorScheme.onBackground)
@@ -1692,7 +1707,7 @@ fun VideoPlayerContainer(viewModel: MediaViewModel, current: MediaItemEntity) {
         if (viewModel.playbackState is PlaybackState.Loading || viewModel.playbackState is PlaybackState.Buffering) {
             AsyncImage(
                 model = current.thumbnailUrl,
-                contentDescription = null,
+                contentDescription = "Interactive element",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -1817,7 +1832,7 @@ fun VideoPlayerContainer(viewModel: MediaViewModel, current: MediaItemEntity) {
                         ) {
                             Icon(
                                 imageVector = if (viewModel.playbackState == PlaybackState.Playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                                contentDescription = "Play/Pause",
+                                contentDescription = "Play or pause media",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -1936,7 +1951,7 @@ fun VideoPlayerContainer(viewModel: MediaViewModel, current: MediaItemEntity) {
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Filled.PictureInPicture, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
+                    Icon(Icons.Filled.PictureInPicture, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("Picture-in-Picture Active", color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
                     Text("The video is floating in background", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), fontSize = 12.sp)
@@ -1995,7 +2010,7 @@ fun MusicPlayerContainer(viewModel: MediaViewModel, current: MediaItemEntity, on
             // Rotating Album Art Disc
             AsyncImage(
                 model = current.thumbnailUrl,
-                contentDescription = null,
+                contentDescription = "Interactive element",
                 modifier = Modifier
                     .size(210.dp)
                     .rotate(if (viewModel.playbackState is PlaybackState.Playing) rotationAngle else 0f)
@@ -2083,7 +2098,7 @@ fun MusicPlayerContainer(viewModel: MediaViewModel, current: MediaItemEntity, on
             colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
         ) {
-            Icon(Icons.Filled.Equalizer, contentDescription = null, modifier = Modifier.size(16.dp))
+            Icon(Icons.Filled.Equalizer, contentDescription = "Interactive element", modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text("Open Pro Equalizer", fontSize = 12.sp)
         }
@@ -2268,7 +2283,7 @@ fun PlaybackControlsSection(viewModel: MediaViewModel) {
             IconButton(onClick = { viewModel.skipToNext() }) {
                 Icon(
                     imageVector = Icons.Filled.SkipNext,
-                    contentDescription = "Next",
+                    contentDescription = "Skip to next track",
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
                 )
@@ -2456,7 +2471,7 @@ fun ProfileScreen(viewModel: MediaViewModel, history: List<PlaybackHistoryEntity
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Filled.AccountBox, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(36.dp))
+                Icon(Icons.Filled.AccountBox, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(36.dp))
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -2528,7 +2543,7 @@ fun ProfileScreen(viewModel: MediaViewModel, history: List<PlaybackHistoryEntity
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     AsyncImage(
                                         model = matchingItem.thumbnailUrl,
-                                        contentDescription = null,
+                                        contentDescription = "Interactive element",
                                         modifier = Modifier
                                             .size(40.dp)
                                             .clip(RoundedCornerShape(4.dp)),
@@ -2542,7 +2557,7 @@ fun ProfileScreen(viewModel: MediaViewModel, history: List<PlaybackHistoryEntity
                                 }
                                 Icon(
                                     imageVector = if (matchingItem.isVideo) Icons.Filled.Movie else Icons.Filled.MusicNote,
-                                    contentDescription = null,
+                                    contentDescription = "Interactive element",
                                     tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
                                 )
                             }
@@ -2591,7 +2606,7 @@ fun MediaCompactCard(item: MediaItemEntity, onClick: () -> Unit, onAddPlaylist: 
             Box {
                 AsyncImage(
                     model = item.thumbnailUrl,
-                    contentDescription = null,
+                    contentDescription = "Interactive element",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
@@ -2607,7 +2622,7 @@ fun MediaCompactCard(item: MediaItemEntity, onClick: () -> Unit, onAddPlaylist: 
                 ) {
                     Icon(
                         imageVector = if (item.isVideo) Icons.Filled.Movie else Icons.Filled.MusicNote,
-                        contentDescription = null,
+                        contentDescription = "Interactive element",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(12.dp)
                     )
@@ -2648,7 +2663,7 @@ fun MediaListRow(
                 Box {
                     AsyncImage(
                         model = item.thumbnailUrl,
-                        contentDescription = null,
+                        contentDescription = "Interactive element",
                         modifier = Modifier
                             .size(50.dp)
                             .clip(RoundedCornerShape(6.dp)),
@@ -2664,7 +2679,7 @@ fun MediaListRow(
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)) {
                             Icon(
                                 imageVector = if (item.isVideo) Icons.Filled.Movie else Icons.Filled.AudioFile,
-                                contentDescription = null,
+                                contentDescription = "Interactive element",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(10.dp)
                             )
@@ -2715,7 +2730,7 @@ fun PlaylistGlowCard(title: String, description: String, color: Color, icon: and
                     .background(color.copy(alpha = 0.15f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(icon, contentDescription = null, tint = color)
+                Icon(icon, contentDescription = "Interactive element", tint = color)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(title, color = MaterialTheme.colorScheme.onBackground, fontSize = 15.sp, fontWeight = FontWeight.Bold)
@@ -2838,7 +2853,7 @@ fun SleepTimerDialog(viewModel: MediaViewModel, onDismiss: () -> Unit) {
                             Text(desc, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), fontSize = 12.sp)
                         }
                         if (viewModel.sleepTimerRemainingSec > 0 && minutes > 0 && (viewModel.sleepTimerRemainingSec / 60).toInt() <= minutes) {
-                            Icon(Icons.Filled.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Filled.Check, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -2876,7 +2891,7 @@ fun AddToPlaylistDialog(
                                 .padding(vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Filled.QueueMusic, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Filled.QueueMusic, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.primary)
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(playlist.name, color = MaterialTheme.colorScheme.onBackground)
                         }
@@ -3189,7 +3204,7 @@ fun SettingRowDropdown(title: String, value: String, options: List<String>) {
                 Text(title, color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
                 Text(value, color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
             }
-            Icon(Icons.Filled.ArrowDropDown, contentDescription = null, tint = MaterialTheme.colorScheme.onBackground)
+            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Interactive element", tint = MaterialTheme.colorScheme.onBackground)
         }
     }
 }
@@ -3279,7 +3294,7 @@ fun PlaylistDetailScreen(
                     .padding(bottom = 16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)
             ) {
-                Icon(Icons.Filled.PlayArrow, contentDescription = null)
+                Icon(Icons.Filled.PlayArrow, contentDescription = "Play all media")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Play All", fontWeight = FontWeight.Bold)
             }
@@ -3310,7 +3325,7 @@ fun PlaylistDetailScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 AsyncImage(
                                     model = item.thumbnailUrl,
-                                    contentDescription = null,
+                                    contentDescription = "Interactive element",
                                     modifier = Modifier
                                         .size(48.dp)
                                         .clip(RoundedCornerShape(6.dp)),
@@ -3378,7 +3393,7 @@ fun LocalMediaListRow(
                 Box {
                     AsyncImage(
                         model = item.thumbnailUrl,
-                        contentDescription = null,
+                        contentDescription = "Interactive element",
                         modifier = Modifier
                             .size(50.dp)
                             .clip(RoundedCornerShape(6.dp)),
@@ -3393,7 +3408,7 @@ fun LocalMediaListRow(
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)) {
                             Icon(
                                 imageVector = if (item.isVideo) Icons.Filled.Movie else Icons.Filled.AudioFile,
-                                contentDescription = null,
+                                contentDescription = "Interactive element",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(10.dp)
                             )
