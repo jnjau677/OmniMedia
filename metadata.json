@@ -1,0 +1,6 @@
+{
+  "name": "Media Player",
+  "description": "A high-performance responsive video and music player with streaming support, local playlists, search, and dynamic custom audio visualizer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
