@@ -994,7 +994,7 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
                     artist = "Durian Open Movie Project",
                     album = "Local Drive",
                     duration = 52000, // 0:52
-                    url = "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                    url = "https://devcode940.media/assets/sample/Sintel.mp4",
                     isVideo = true,
                     isLocal = true,
                     isDownloaded = true,

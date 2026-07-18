@@ -1244,7 +1244,7 @@ fun FileExplorerView(
                 artist = "Durian Open Movie Project",
                 album = "Local Drive",
                 duration = 52000,
-                url = "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                url = "https://devcode940.media/assets/sample/Sintel.mp4",
                 isVideo = true,
                 isLocal = true,
                 isDownloaded = true,
@@ -1259,7 +1259,7 @@ fun FileExplorerView(
                 artist = "Blender Foundation",
                 album = "Local Drive",
                 duration = 596000,
-                url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                url = "https://devcode940.media/assets/sample/BigBuckBunny.mp4",
                 isVideo = true,
                 isLocal = true,
                 isDownloaded = false,
@@ -1274,7 +1274,7 @@ fun FileExplorerView(
                 artist = "Stellar AudioLabs",
                 album = "Local Drive",
                 duration = 135000,
-                url = "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                url = "https://devcode940.media/assets/sample/TearsOfSteel.mp4",
                 isVideo = true,
                 isLocal = true,
                 isDownloaded = false,
@@ -3541,7 +3541,7 @@ fun AddLocalMediaDialog(onAdd: (MediaItemEntity) -> Unit, onDismiss: () -> Unit)
                 TextButton(
                     onClick = {
                         url = if (isVideo) {
-                            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                            "https://devcode940.media/assets/sample/ForBiggerBlazes.mp4"
                         } else {
                             "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
                         }
@@ -3590,7 +3590,7 @@ fun AddLocalMediaDialog(onAdd: (MediaItemEntity) -> Unit, onDismiss: () -> Unit)
                         onClick = {
                             if (title.isNotEmpty()) {
                                 val finalUrl = url.ifEmpty {
-                                    if (isVideo) "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                                    if (isVideo) "https://devcode940.media/assets/sample/ForBiggerBlazes.mp4"
                                     else "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
                                 }
                                 val finalThumb = thumbnailUrl.ifEmpty {

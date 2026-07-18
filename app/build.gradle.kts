@@ -3,7 +3,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.google.devtools.ksp)
+  // devcode940: removed google.devtools.ksp plugin reference
 }
 
 android {
@@ -56,10 +56,7 @@ android {
 dependencies {
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.activity.compose)
-  // Local-first: no Firebase dependencies required
-  // implementation(platform(libs.firebase.bom))
-  // implementation(libs.firebase.ai)
-  // implementation(libs.firebase.appcheck.recaptcha)
+  // devcode940: no Firebase / Google dependencies required
   // implementation(libs.androidx.camera.camera2)
   // implementation(libs.androidx.camera.core)
   // implementation(libs.androidx.camera.lifecycle)
@@ -80,19 +77,10 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
-  // HILT (Dependency Injection) reference for production architecture
-  // implementation("com.google.dagger:hilt-android:2.44")
-  // ksp("com.google.dagger:hilt-compiler:2.44")
-  // Uncomment to use Firestore:
-  // implementation(libs.firebase.firestore)
+  // devcode940: HILT (Dependency Injection) reference removed (no google.dagger)
+  // devcode940: removed Firestore / Google Play Services location references
 
-  // Firebase Auth with Google Sign-In requires all of the following to be uncommented together.
-  // If you are using Firebase Auth with other providers (e.g. Email/Password), you may only need
-  // firebase-auth.
-  // implementation(libs.firebase.auth)
-  // implementation(libs.androidx.credentials)
-  // implementation(libs.androidx.credentials.play.services)
-  // implementation(libs.googleid)
+  // devcode940: Firebase Auth with Google Sign-In removed; using local-first auth only
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.logging.interceptor)
